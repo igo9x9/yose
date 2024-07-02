@@ -181,8 +181,13 @@ function QuestionsDrawer(scene) {
         self.choiseA = Choise({alphabet: "A", question: questionA, callback: callbackA});
         self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
     
-        self.choiseA.setPosition(self.scene.gridX.center(), self.scene.gridY.span(5)).addChildTo(self.scene);
-        self.choiseB.setPosition(self.scene.gridX.center(), self.scene.gridY.span(12.2)).addChildTo(self.scene);
+        // self.choiseA.setPosition(self.scene.gridX.center(), self.scene.gridY.span(5)).addChildTo(self.scene);
+        self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
+            .tweener.to({x: self.scene.gridX.center()}, 200).play();
+
+        // self.choiseB.setPosition(self.scene.gridX.center(), self.scene.gridY.span(12.2)).addChildTo(self.scene);
+        self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
+            .tweener.to({x: self.scene.gridX.center()}, 200).play();
     };
 
     function showPriority() {
@@ -228,7 +233,7 @@ phina.define("Choise", {
         this.superInit({
             width: 600,
             height: 410,
-            fill: "#bdc3c7",
+            fill: "#ecf0f1",
             strokeWidth: 10,
             stroke: "#2c3e50",
             cornerRadius: 10,
@@ -401,7 +406,9 @@ phina.define('ResultScene', {
             }
         }
 
-        img.alpha = 0.5;
+        img.alpha = 0.9;
+
+        img.tweener.to({alpha: 0.3}, 500);
 
         // setTimeout(function() {
         //     img.remove();
@@ -439,7 +446,7 @@ phina.main(function() {
         ],
     });
 
-    App.fps = 30;
+    App.fps = 60;
     // App.enableStats();
 
     App.run();
