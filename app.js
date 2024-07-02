@@ -16,13 +16,22 @@ phina.define('TitleScene', {
 
         const self = this;
 
-        this.backgroundColor = "gray";
+        this.backgroundColor = "#ecf0f1";
 
         Label({
-            text: 'タイトル',
+            text: 'ヨセくらべ',
             x: 320,
             y: 320,
-            fontSize: 40,
+            fontSize: 80,
+            fill: "black",
+            fontWeight: 800,
+        }).addChildTo(this);
+
+        Label({
+            text: 'タップして開始',
+            x: 320,
+            y: 520,
+            fontSize: 30,
             fill: "black",
             fontWeight: 800,
         }).addChildTo(this);
@@ -46,16 +55,17 @@ phina.define('ExplanationScene', {
         App.clear("miss");
 
 
-        this.backgroundColor = "gray";
+        this.backgroundColor = "#ecf0f1";
 
-        Label({
-            text: '説明',
-            x: 320,
-            y: 320,
-            fontSize: 40,
+        LabelArea({
+            text: '＜遊び方＞\n\n黒番のヨセが２つ出てきます。より価値が高いと思われる方をタップしてください。全５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」 としています。\n\nそれが同じ場合は、より目数が多いほうを正解としています。',
+            x: 50,
+            y: 100,
+            width: 500,
+            height: 600,
+            fontSize: 30,
             fill: "black",
-            fontWeight: 800,
-        }).addChildTo(this);
+        }).setOrigin(0,0).addChildTo(this);
 
         this.on("pointstart",function() {
             this.exit();
@@ -313,6 +323,44 @@ phina.define("Choise", {
         CircleShape({x: goban._grid.unitWidth * 2, y: goban._grid.unitWidth * -4, radius: 5, fill: "black", strokeWidth: 0}).addChildTo(goban);
         CircleShape({x: goban._grid.unitWidth * -4, y: goban._grid.unitWidth * -4, radius: 5, fill: "black", strokeWidth: 0}).addChildTo(goban);
         
+        const step = options.question.stones;
+        console.log(step);
+        (11).times(function(y) {
+            console.log(step[y]);
+            const raws = step[y].split("");
+            (11).times(function(x) {
+                const color = raws[x];
+                if (color !== " ") {
+                    putStone(x, y , color);
+                }
+            });
+        });
+
+        function putStone(x, y, color) {
+
+            const px = -1 * goban.width / 2 + goban._grid.span(x + 0.5);
+            const py = -1 * goban.height / 2 + goban._grid.span(y + 0.5);
+
+            if (color === "B" || color === "W") {
+                CircleShape({
+                    radius: goban._grid.unitWidth / 2,
+                    fill: color === "B" ? "black" : "white",
+                }).setPosition(px, py).addChildTo(goban);
+                return;
+            }
+
+            CircleShape({
+                radius: goban._grid.unitWidth / 2,
+                fill: Number(color) % 2 !== 0 ? "black" : "white",
+            }).setPosition(px, py).addChildTo(goban);
+
+            Label({
+                text: color,
+                fontSize: 25,
+                fill: Number(color) % 2 === 0 ? "black" : "white"
+            }).setPosition(px, py).addChildTo(goban);
+
+        }
 
         const alphabetLabel = Label({
             text: "",
@@ -518,6 +566,17 @@ const data = [
         size: 2,
         sizeText: "２目強",
         stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      3    ",
+            "       2   ",
+            "        1  ",
+            "         W ",
+            "          B",
         ]
     },
     {
@@ -526,6 +585,17 @@ const data = [
         size: 1,
         sizeText: "1目",
         stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      3    ",
+            "       2   ",
+            "        1  ",
+            "         W ",
+            "          B",
         ]
     },
     {
@@ -534,6 +604,17 @@ const data = [
         size: 1,
         sizeText: "1目",
         stones: [
-        ]
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      3    ",
+            "       2   ",
+            "        1  ",
+            "         W ",
+            "          B",
+       ]
     },
 ]
