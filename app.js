@@ -70,6 +70,10 @@ phina.define('GameScene', {
     questions: null,
     questionsDrawer: null,
 
+    questionNumber: 0,
+
+    okNumber: 0,
+
     init: function(options) {
         this.superInit(options);
 
@@ -78,6 +82,16 @@ phina.define('GameScene', {
         App.on("timeup", function() {
             console.log("time up");
         });
+
+        // 問題番号
+        self.questionNumberLabel = Label({
+            x: 320,
+            y: 45,
+            fontSize: 40,
+            text: "aa",
+        }).addChildTo(this);
+
+        self.updateQuestionNumberLabel();
 
         // 全ての問題を作る
         self.questions = new Questions();
@@ -89,6 +103,7 @@ phina.define('GameScene', {
         self.questionsDrawer.draw(self.questions.nextQuestion());
 
         App.on("ok", function(param) {
+            self.okNumber += 1;
             App.pushScene(ResultScene({isOK: true, isUpper: param.isUpper}));
         });
 
@@ -101,13 +116,19 @@ phina.define('GameScene', {
             // 次の問題があるなら
             if (self.questions.haveNextQuestion()) {
                 // 次の問題へ
+                self.updateQuestionNumberLabel();
                 self.questionsDrawer.draw(self.questions.nextQuestion());
             } else {
-                self.exit();
+                self.exit({okNumber: self.okNumber});
             }
         });
 
 
+    },
+
+    updateQuestionNumberLabel: function() {
+        this.questionNumber += 1;
+        this.questionNumberLabel.text = "第" + this.questionNumber + "問";
     },
 
 });
@@ -140,8 +161,8 @@ function QuestionsDrawer(scene) {
             self.choiseB.remove();
         }
     
-        self.timer = Timer({seconds: 60});
-        self.timer.addChildTo(self.scene).setPosition(self.scene.gridX.center(), 50);
+        // self.timer = Timer({seconds: 60});
+        // self.timer.addChildTo(self.scene).setPosition(self.scene.gridX.center(), 50);
     
         const okCallback = function(isUpper) {
             return () => {
@@ -377,8 +398,31 @@ phina.define('LastScene', {
 
         this.backgroundColor = "white";
 
+        const score = options.okNumber / 5 * 100;
+
         Label({
-            text: '結果',
+            text: 'スコア：' + score + "点",
+            x: 320,
+            y: 420,
+            fontSize: 40,
+            fill: "black",
+            fontWeight: 800,
+        }).addChildTo(this);
+
+        let msg = "";
+
+        if (score === 100) {
+            msg = "すばらしい！";
+        } else if (score >= 80) {
+            msg = "おしい！";
+        } else if (score >= 60) {
+            msg = "がんばりました！";
+        } else {
+            msg = "お疲れ様でした";
+        }
+
+        Label({
+            text: msg,
             x: 320,
             y: 320,
             fontSize: 40,
@@ -459,7 +503,7 @@ phina.main(function() {
         ],
     });
 
-    App.fps = 60;
+    App.fps = 30;
     // App.enableStats();
 
     App.run();
