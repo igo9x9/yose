@@ -204,8 +204,21 @@ function Questions() {
 
     const questions = [];
 
-    questions.push({"A": data[0], "B": data[1]});
-    questions.push({"A": data[1], "B": data[0]});
+    for (let i = 0; i < 5; i++) {
+
+        const index1 = Random.randint(0, data.length - 1);
+        const priority = data[index1].priority;
+        const size = data[index1].size;
+
+        const nokori = data.filter(function(q) {
+            return q.priority !== priority || q.size !== size;
+        });
+
+        const index2 = Random.randint(0, nokori.length - 1);
+
+        questions.push({"A": data[index1], "B": nokori[index2]});
+
+    }
 
     // 次の問題を返す
     self.nextQuestion = function() {
@@ -466,8 +479,16 @@ const data = [
     {
         id: "2",
         priority: 2,
-        size: 2,
-        sizeText: "２目",
+        size: 1,
+        sizeText: "1目",
+        stones: [
+        ]
+    },
+    {
+        id: "3",
+        priority: 3,
+        size: 1,
+        sizeText: "1目",
         stones: [
         ]
     },
