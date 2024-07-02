@@ -3,6 +3,8 @@ phina.globalize();
 
 ASSETS = {
     image: {
+        "ok": "img/ok.png",
+        "miss": "img/miss.png",
     },
 };
 
@@ -40,6 +42,9 @@ phina.define('ExplanationScene', {
         this.superInit(options);
 
         const self = this;
+        App.clear("ok");
+        App.clear("miss");
+
 
         this.backgroundColor = "gray";
 
@@ -61,36 +66,159 @@ phina.define('ExplanationScene', {
 
 phina.define('GameScene', {
     superClass: 'DisplayScene',
-  
+
+    questions: null,
+    questionsDrawer: null,
+
     init: function(options) {
         this.superInit(options);
 
         const self = this;
 
-        this.backgroundColor = "#ECF0F1";
-
-        const timer = Timer({seconds: 60});
-
-        timer.addChildTo(this).setPosition(this.gridX.center(), 50);
-
-        const q1 = {id: "10"};
-
-        const questionA = Question({alphabet: "A", question: questions[0]});
-
-        questionA.setPosition(this.gridX.center(), this.gridY.span(5)).addChildTo(this);
-
-        const questionB = Question({alphabet: "B", question: questions[1]});
-
-        questionB.setPosition(this.gridX.center(), this.gridY.span(12.2)).addChildTo(this);
-
         App.on("timeup", function() {
             console.log("time up");
         });
 
+        // 全ての問題を作る
+        self.questions = new Questions();
+
+        // 問題描画クラスを生成
+        self.questionsDrawer = new QuestionsDrawer(this);
+
+        // 問題を描画
+        self.questionsDrawer.draw(self.questions.nextQuestion());
+
+        App.on("ok", function(param) {
+            App.pushScene(ResultScene({isOK: true, isUpper: param.isUpper}));
+        });
+
+        App.on("miss", function(param) {
+            App.pushScene(ResultScene({isOK: false, isUpper: param.isUpper}));
+        });
+
+        this.on("resume", function() {
+
+            // 次の問題があるなら
+            if (self.questions.haveNextQuestion()) {
+                // 次の問題へ
+                self.questionsDrawer.draw(self.questions.nextQuestion());
+            } else {
+                self.exit();
+            }
+        });
+
+
     },
+
 });
 
-phina.define("Question", {
+// 問題描画クラス
+function QuestionsDrawer(scene) {
+
+    const self = this;
+
+    self.scene = scene;
+
+    self.timer = null;
+    self.choiseA = null;
+    self.choiseB = null;
+
+    self.draw = function(question) {
+
+        const self = this;
+
+        const questionA = question.A;
+        const questionB = question.B;
+    
+        if (self.timer) {
+            self.timer.remove();
+        }
+        if (self.choiseA) {
+            self.choiseA.remove();
+        }
+        if (self.choiseB) {
+            self.choiseB.remove();
+        }
+    
+        self.timer = Timer({seconds: 60});
+        self.timer.addChildTo(self.scene).setPosition(self.scene.gridX.center(), 50);
+    
+        const okCallback = function(isUpper) {
+            return () => {
+                showPriority();
+                App.flare("ok", {isUpper: isUpper});
+            };
+        };
+    
+        const badCallback = function(isUpper) {
+            return () => {
+                showPriority();
+                App.flare("miss", {isUpper: isUpper});
+            };
+        };
+    
+        let callbackA, callbackB;
+    
+        if (questionA.priority > questionB.priority) {
+            callbackA = okCallback(true);
+            callbackB = badCallback(false);
+        } else if (questionA.priority < questionB.priority) {
+            callbackA = badCallback(true);
+            callbackB = okCallback(false);
+        } else {
+            if (questionA.size > questionB.size) {
+                callbackA = okCallback(true);
+                callbackB = badCallback(false);
+            } else if (questionA.size < questionB.size) {
+                callbackA = badCallback(true);
+                callbackB = okCallback(false);
+            } else {
+                callbackA = okCallback(true);
+                callbackB = okCallback(false);
+            }
+        }
+    
+        self.choiseA = Choise({alphabet: "A", question: questionA, callback: callbackA});
+        self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
+    
+        self.choiseA.setPosition(self.scene.gridX.center(), self.scene.gridY.span(5)).addChildTo(self.scene);
+        self.choiseB.setPosition(self.scene.gridX.center(), self.scene.gridY.span(12.2)).addChildTo(self.scene);
+    };
+
+    function showPriority() {
+        self.choiseA.priorityLabel.show();
+        self.choiseB.priorityLabel.show(); 
+    }
+
+}
+
+// 全ての問題
+function Questions() {
+
+    const self = this;
+
+    const questions = [];
+
+    questions.push({"A": data[0], "B": data[1]});
+    questions.push({"A": data[1], "B": data[0]});
+
+    // 次の問題を返す
+    self.nextQuestion = function() {
+        if (self.haveNextQuestion()) {
+            return questions.pop();
+        }
+        // 全ての問題をやり終えたのなら、イベント発火
+        App.flare("complete");
+        return null;
+    };
+
+    // 次の問題があるかを返す
+    self.haveNextQuestion = function () {
+        return questions.length > 0;
+    };
+}
+
+phina.define("Choise", {
     superClass: "RectangleShape",
 
     init: function(options) {
@@ -100,9 +228,9 @@ phina.define("Question", {
         this.superInit({
             width: 600,
             height: 410,
-            fill: "#BDC3C7",
+            fill: "#bdc3c7",
             strokeWidth: 10,
-            stroke: "black",
+            stroke: "#2c3e50",
             cornerRadius: 10,
         });
 
@@ -147,17 +275,19 @@ phina.define("Question", {
         CircleShape({x: goban._grid.unitWidth * -4, y: goban._grid.unitWidth * -4, radius: 5, fill: "black", strokeWidth: 0}).addChildTo(goban);
         
 
-        Label({
-            text: options.alphabet,
+        const alphabetLabel = Label({
+            text: "",
             fontSize: 80,
-            fill: "white",
+            fill: "#2c3e50",
         }).setPosition(-210,-150).addChildTo(this);
+        alphabetLabel.text = options.alphabet;
 
-        Label({
-            text: "問題番号：" + options.question.id,
-            fontSize: 20,
-            fill: "white",
+        const questionIdLabel = Label({
+            text: "",
+            fontSize: 23,
+            fill: "#2c3e50",
         }).setPosition(-210,-80).addChildTo(this);
+        questionIdLabel.text = "問題番号：" + options.question.id;
 
         const priorityText = {
             0: "両後手",
@@ -166,11 +296,19 @@ phina.define("Question", {
             3: "両先手",
         };
 
-        Label({
-            text: priorityText[options.question.priority] + "\n" + options.question.sizeText,
+        self.priorityLabel = Label({
+            text: "",
             fontSize: 40,
             fontWeight: 800,
-        }).setPosition(-210,20).addChildTo(this);
+            fill: "black",
+        }).setPosition(-210,20).hide().addChildTo(this);
+        self.priorityLabel.text = priorityText[options.question.priority] + "\n" + options.question.sizeText;
+
+        this.setInteractive(true);
+
+        this.on("pointstart", function() {
+            options.callback();
+        });
 
     }
 });
@@ -190,7 +328,7 @@ phina.define("Timer", {
             width: 600,
             height: 50,
             strokeWidth: 0,
-            fill: "#D35400",
+            fill: "#2980b9",
         }).addChildTo(this).setOrigin(0, 0).setPosition(- this.width / 2 - 7, - this.height / 2 - 7);
 
         this.seconds = option.seconds;
@@ -211,9 +349,74 @@ phina.define("Timer", {
     }
 });
 
+phina.define('LastScene', {
+    superClass: 'DisplayScene',
+  
+    init: function(options) {
+        this.superInit(options);
+
+        const self = this;
+
+        this.backgroundColor = "white";
+
+        Label({
+            text: '結果',
+            x: 320,
+            y: 320,
+            fontSize: 40,
+            fill: "black",
+            fontWeight: 800,
+        }).addChildTo(this);
+
+        this.on("pointstart",function() {
+            this.exit();
+        });
+
+    },
+});
+
+phina.define('ResultScene', {
+    superClass: 'DisplayScene',
+  
+    init: function(options) {
+        this.superInit(options);
+
+        const self = this;
+
+        this.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+
+        let img = null;
+
+        if (options.isOK) {
+            if (options.isUpper) {
+                img = Sprite("ok").addChildTo(this).setPosition(390, 300);
+            } else {
+                img = Sprite("ok").addChildTo(this).setPosition(390, 720);
+            }
+        } else {
+            if (options.isUpper) {
+                img = Sprite("miss").addChildTo(this).setPosition(390, 300);
+            } else {
+                img = Sprite("miss").addChildTo(this).setPosition(390, 720);
+            }
+        }
+
+        img.alpha = 0.5;
+
+        // setTimeout(function() {
+        //     img.remove();
+        // }, 300);
+
+        this.on("pointstart",function() {
+            self.exit();
+        });
+
+    },
+});
+
 phina.main(function() {
     App = GameApp({
-        // assets: ASSETS,
+        assets: ASSETS,
         startLabel: 'TitleScene',
         scenes: [
             {
@@ -227,6 +430,11 @@ phina.main(function() {
             }, {
                 label: 'GameScene',
                 className: 'GameScene',
+                nextLabel: "LastScene",
+            }, {
+                label: 'LastScene',
+                className: 'LastScene',
+                nextLabel: "TitleScene",
             }
         ],
     });
@@ -239,12 +447,12 @@ phina.main(function() {
 });
 
 
-const questions = [
+const data = [
     {
         id: "1",
-        priority: 0,
-        size: 1,
-        sizeText: "１目強",
+        priority: 1,
+        size: 2,
+        sizeText: "２目強",
         stones: [
         ]
     },
