@@ -212,11 +212,9 @@ function QuestionsDrawer(scene) {
         self.choiseA = Choise({alphabet: "A", question: questionA, callback: callbackA});
         self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
     
-        // self.choiseA.setPosition(self.scene.gridX.center(), self.scene.gridY.span(5)).addChildTo(self.scene);
         self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
             .tweener.to({x: self.scene.gridX.center()}, 200).play();
 
-        // self.choiseB.setPosition(self.scene.gridX.center(), self.scene.gridY.span(12.2)).addChildTo(self.scene);
         self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
             .tweener.to({x: self.scene.gridX.center()}, 200).play();
     };
@@ -242,7 +240,9 @@ function Questions() {
         const size = data[index1].size;
 
         const nokori = data.filter(function(q) {
-            return q.priority !== priority || q.size !== size;
+            //@@@
+            return !(q.priority === priority && q.size === size);
+            // return q.id !== data[index1].id;
         });
 
         const index2 = Random.randint(0, nokori.length - 1);
@@ -286,7 +286,7 @@ phina.define("Choise", {
         const goban = RectangleShape({
             width: 400,
             height: 400,
-            fill: "#F1C40F",
+            fill: "#ffa801",
             strokeWidth: 0,
         }).addChildTo(self).setX(80);
 
@@ -324,7 +324,7 @@ phina.define("Choise", {
         CircleShape({x: goban._grid.unitWidth * -4, y: goban._grid.unitWidth * -4, radius: 5, fill: "black", strokeWidth: 0}).addChildTo(goban);
         
         const step = options.question.stones;
-        console.log(step);
+
         (11).times(function(y) {
             console.log(step[y]);
             const raws = step[y].split("");
@@ -343,14 +343,18 @@ phina.define("Choise", {
 
             if (color === "B" || color === "W") {
                 CircleShape({
-                    radius: goban._grid.unitWidth / 2,
+                    strokeWidth: 0,
+                    radius: goban._grid.unitWidth / 2 - 0.5,
                     fill: color === "B" ? "black" : "white",
                 }).setPosition(px, py).addChildTo(goban);
                 return;
             }
 
+            if (color !== "1") return;
+
             CircleShape({
-                radius: goban._grid.unitWidth / 2,
+                strokeWidth: 0,
+                radius: goban._grid.unitWidth / 2 - 0.5,
                 fill: Number(color) % 2 !== 0 ? "black" : "white",
             }).setPosition(px, py).addChildTo(goban);
 
@@ -460,13 +464,15 @@ phina.define('LastScene', {
         let msg = "";
 
         if (score === 100) {
-            msg = "すばらしい！";
+            msg = "完璧！";
         } else if (score >= 80) {
-            msg = "おしい！";
+            msg = "すばらしい！";
         } else if (score >= 60) {
-            msg = "がんばりました！";
+            msg = "すごい！";
+        } else if (score >= 40) {
+            msg = "もう少し！";
         } else {
-            msg = "お疲れ様でした";
+            msg = "うーん…";
         }
 
         Label({
@@ -562,9 +568,9 @@ phina.main(function() {
 const data = [
     {
         id: "1",
-        priority: 1,
-        size: 2,
-        sizeText: "２目強",
+        priority: 0,
+        size: 0,
+        sizeText: "1/3目",
         stones: [
             "           ",
             "           ",
@@ -572,15 +578,205 @@ const data = [
             "           ",
             "           ",
             "           ",
-            "      3    ",
-            "       2   ",
-            "        1  ",
-            "         W ",
-            "          B",
+            "     WWBB  ",
+            "     W1WB  ",
+            "     WWBB  ",
+            "           ",
+            "           ",
         ]
     },
     {
         id: "2",
+        priority: 0,
+        size: 0,
+        sizeText: "1/3目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     WWBB  ",
+            "     WB1B  ",
+            "     WWBB  ",
+            "           ",
+            "           ",
+        ]
+    },
+    {
+        id: "3",
+        priority: 0,
+        size: 0,
+        sizeText: "1/3目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        B  ",
+            "      B    ",
+            "     B     ",
+            "    WWBBBB ",
+            "   W  WWWB1",
+            "        WWB",
+            "        WB ",
+       ]
+    },
+    {
+        id: "4",
+        priority: 0,
+        size: 0,
+        sizeText: "1/3目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        B  ",
+            "      B    ",
+            "     B     ",
+            "    WWBBBB ",
+            "   W  WWWB3",
+            "        WWB",
+            "        21 ",
+       ]
+    },
+    {
+        id: "5",
+        priority: 0,
+        size: 1,
+        sizeText: "1目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      WWWWW",
+            "     WW1BWB",
+            "     WB BBB",
+            "      BBB  ",
+            "    B      ",
+            "           ",
+       ]
+    },
+    {
+        id: "6",
+        priority: 0,
+        size: 1,
+        sizeText: "1目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     W W   ",
+            "    BW   W ",
+            "     BWWW  ",
+            "   B BBB1W ",
+            "        BBW",
+            "         B ",
+       ]
+    },
+    {
+        id: "7",
+        priority: 0,
+        size: 1,
+        sizeText: "1目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     BBWWW ",
+            "     B21BW ",
+            "     BBWWW ",
+            "           ",
+            "           ",
+       ]
+    },
+    {
+        id: "8",
+        priority: 0,
+        size: 1,
+        sizeText: "1目強",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "       WWW ",
+            "     BBWBW ",
+            "     B21BW ",
+            "     BBWWW ",
+            "           ",
+            "           ",
+       ]
+    },
+    {
+        id: "9",
+        priority: 0,
+        size: 1,
+        sizeText: "1目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      BB   ",
+            "     B  B  ",
+            "     BWWBBB",
+            "     BW WBW",
+            "     B1WWWW",
+            "    WWW    ",
+            "           ",
+       ]
+    },
+    {
+        id: "10",
+        priority: 0,
+        size: 1,
+        sizeText: "1目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "    WWWWW  ",
+            "   BB B3BW ",
+            "      B BW ",
+            "    B B1BW ",
+            "   B BW2W  ",
+            "    BWWBBW ",
+            "     B WW  ",
+       ]
+    },
+    {
+        id: "11",
+        priority: 2,
+        size: 1,
+        sizeText: "1目弱",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        W  ",
+            "      W    ",
+            "     BBWWW ",
+            "       BWB2",
+            "    B B BW ",
+            "        BW1",
+            "         B ",
+       ]
+    },
+    {
+        id: "12",
         priority: 2,
         size: 1,
         sizeText: "1目",
@@ -591,16 +787,16 @@ const data = [
             "           ",
             "           ",
             "           ",
-            "      3    ",
-            "       2   ",
-            "        1  ",
-            "         W ",
-            "          B",
-        ]
+            "           ",
+            "       BBB ",
+            "   BBBBWWB ",
+            "   BWWWW WB",
+            "   B12 W W ",
+       ]
     },
     {
-        id: "3",
-        priority: 3,
+        id: "13",
+        priority: 2,
         size: 1,
         sizeText: "1目",
         stones: [
@@ -610,11 +806,258 @@ const data = [
             "           ",
             "           ",
             "           ",
-            "      3    ",
-            "       2   ",
-            "        1  ",
+            "        B  ",
+            "   WBB  WB ",
+            " W WWWBBBB ",
+            "     2WWB  ",
+            "       1   ",
+       ]
+    },
+    {
+        id: "14",
+        priority: 2,
+        size: 1,
+        sizeText: "1目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "       B BB",
+            "         BW",
+            "       BBWW",
+            "     B BW W",
+            "       12W ",
+       ]
+    },
+    {
+        id: "15",
+        priority: 2,
+        size: 1,
+        sizeText: "1目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        W  ",
+            "           ",
+            "    BBBBBW ",
+            "    BWW1WW ",
+            "  B BW W2  ",
+            "   BWW     ",
+       ]
+    },
+    {
+        id: "16",
+        priority: 0,
+        size: 1.5,
+        sizeText: "1目半",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "    BBBBBB ",
+            "     WW1WW ",
+            "     W  W  ",
+            "     WWWW  ",
+            "           ",
+            "           ",
+       ]
+    },
+    {
+        id: "17",
+        priority: 0,
+        size: 1.5,
+        sizeText: "1目半",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "    BBBBB  ",
+            "   B  B  B ",
+            "   BWW1WWB ",
+            "   BW   WB ",
+            "   B WWWBB ",
+            "  WWW  WWB ",
             "         W ",
-            "          B",
+       ]
+    },
+    {
+        id: "18",
+        priority: 0,
+        size: 1.5,
+        sizeText: "1目半",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     BBBBBB",
+            "     BWWWWW",
+            "     B1  W ",
+            "     BWWWW ",
+            "     BW    ",
+       ]
+    },
+    {
+        id: "19",
+        priority: 2,
+        size: 1.5,
+        sizeText: "1目半",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "         W ",
+            "     W WW  ",
+            "     W W W ",
+            "   BBWBB 2 ",
+            "   BWBB BW1",
+            "         B ",
+       ]
+    },
+    {
+        id: "20",
+        priority: 2,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "         W ",
+            "     W WW  ",
+            "     W W W ",
+            "   BBWBB 2 ",
+            "   BWBB BW1",
+            "         B ",
+       ]
+    },
+    {
+        id: "21",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     BBBBBB",
+            "     BWWWWW",
+            "     B1 BW ",
+            "     BWWWW ",
+            "     BW    ",
+       ]
+    },
+    {
+        id: "22",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     BBBBB ",
+            "     B1W B ",
+            "     WB WBB",
+            "   W WWWWWB",
+            "          W",
+            "         W ",
+       ]
+    },
+    {
+        id: "23",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "    BBBWW  ",
+            "    BW1BW  ",
+            "    BBBWW  ",
+            "           ",
+       ]
+    },
+    {
+        id: "24",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "    BBWWW  ",
+            "    B 1 W  ",
+            "    BBBWW  ",
+            "           ",
+       ]
+    },
+    {
+        id: "25",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "     BBBBB ",
+            "    BBWWB  ",
+            "   WW312WBB",
+            "   W WWWWWB",
+            "          W",
+            "         W ",
+       ]
+    },
+    {
+        id: "26",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "    BBBWW  ",
+            "    BWW1W  ",
+            "    BBBWW  ",
+            "           ",
        ]
     },
 ]
