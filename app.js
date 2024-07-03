@@ -182,11 +182,11 @@ function QuestionsDrawer(scene) {
         const questionA = question.A;
         const questionB = question.B;
 
-        let run;
+        let waitCharacter;
         if (Random.randint(0, 1) === 0) {
-            run = Sprite("run").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.span(11));
+            waitCharacter = Sprite("run").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.span(11));
         } else {
-            run = Sprite("run2").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.span(11));
+            waitCharacter = Sprite("run2").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.span(11));
         }
 
         if (self.timer) {
@@ -244,7 +244,8 @@ function QuestionsDrawer(scene) {
             self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
 
             setTimeout(function() {
-                run.tweener.to({x: -100}, 300).call(function(){run.remove();}).play();
+
+                waitCharacter.tweener.to({x: -100}, 300).call(function(){waitCharacter.remove()}).play();
         
                 self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
                     .tweener.to({x: self.scene.gridX.center()}, 300).play();
