@@ -1,6 +1,6 @@
 phina.globalize();
 
-const version = "0.9";
+const version = "1.0";
 
 ASSETS = {
     image: {
@@ -264,9 +264,7 @@ function Questions() {
         const size = data[index1].size;
 
         const nokori = data.filter(function(q) {
-            //@@@
             return !(q.priority === priority && q.size === size);
-            // return q.id !== data[index1].id;
         });
 
         const index2 = Random.randint(0, nokori.length - 1);
@@ -274,6 +272,11 @@ function Questions() {
         questions.push({"A": data[index1], "B": nokori[index2]});
 
     }
+    // for (let i = 0; i < data.length; i++) {
+
+    //     questions.push({"A": data[i], "B": data[i]});
+
+    // }
 
     // 次の問題を返す
     self.nextQuestion = function() {
@@ -922,7 +925,7 @@ const data = [
             "    BBBBB  ",
             "   B  B  B ",
             "   BWW1WWB ",
-            "   BW   WB ",
+            "   BW W WB ",
             "   B WWWBB ",
             "  WWW  WWB ",
             "         W ",
@@ -968,7 +971,7 @@ const data = [
     },
     {
         id: "20",
-        priority: 2,
+        priority: 0,
         size: 2,
         sizeText: "2目",
         stones: [
@@ -1511,10 +1514,10 @@ const data = [
             "        BB ",
             "       BWW ",
             "     BBBW W",
-            "  B  BW  W ",
-            "B    BW  W ",
+            "  B  BWBBW ",
+            "B    BW3BW ",
             "     BW1WW ",
-            "           ",
+            "     5426  ",
        ]
     },
     {
@@ -1552,7 +1555,7 @@ const data = [
             "   B  B    ",
             " B    BWW  ",
             "      BW   ",
-            "      1    ",
+            "       1   ",
        ]
     },
     {
@@ -1850,7 +1853,7 @@ const data = [
             "           ",
             "           ",
             "           ",
-            "         W ",
+            "        W  ",
             "      B    ",
             "      BW   ",
             "      BW   ",
@@ -1893,7 +1896,7 @@ const data = [
             "   WWBBW   ",
             "       W   ",
             " WWWWBBW   ",
-            " WB B BW 4 ",
+            " WBWB BW 4 ",
             " WBBB 312  ",
        ]
     },
