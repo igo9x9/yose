@@ -1930,7 +1930,7 @@ const data = [
             "           ",
             "     B     ",
             "    WWBBBB ",
-            "   W     B ",
+            "   W  WWWB ",
             "         W1",
             "         2 ",
        ]
