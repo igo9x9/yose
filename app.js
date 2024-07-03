@@ -78,7 +78,7 @@ phina.define('ExplanationScene', {
         this.backgroundColor = "#ecf0f1";
 
         LabelArea({
-            text: '＜遊び方＞\n\n黒番のヨセが２つ表示されます。ヨセの価値が高い方を選んでください。出題は全部で５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」としています。\n\nそれが同じ場合、より目数が多いほうを選んでください。',
+            text: '＜遊び方＞\n\n黒番のヨセが２つ表示されますので、価値が高い方を選んでください。出題は全部で５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」としています。\n\nそれが同じ場合、より目数が多いほうを選んでください。',
             x: 50,
             y: 100,
             width: 500,
@@ -252,7 +252,9 @@ function QuestionsDrawer(scene) {
 
     function showPriority() {
         self.choiseA.priorityLabel.show();
+        self.choiseA.questionIdLabel.show();
         self.choiseB.priorityLabel.show(); 
+        self.choiseB.questionIdLabel.show();
     }
 
 }
@@ -407,12 +409,12 @@ phina.define("Choise", {
         }).setPosition(-210,-150).addChildTo(this);
         alphabetLabel.text = options.alphabet;
 
-        const questionIdLabel = Label({
+        self.questionIdLabel = Label({
             text: "",
             fontSize: 23,
             fill: "#2c3e50",
-        }).setPosition(-210,-80).addChildTo(this);
-        questionIdLabel.text = "問題番号：" + options.question.id;
+        }).setPosition(-210,-80).hide().addChildTo(this);
+        self.questionIdLabel.text = "問題番号：" + options.question.id;
 
         const priorityText = {
             0: "両後手",
