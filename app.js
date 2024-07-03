@@ -13,6 +13,7 @@ ASSETS = {
         "result4": "img/result4.png",
         "result5": "img/result5.png",
         "result6": "img/result6.png",
+        "run": "img/run.png",
     },
 };
 
@@ -180,6 +181,8 @@ function QuestionsDrawer(scene) {
         const questionA = question.A;
         const questionB = question.B;
 
+        const run = Sprite("run").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.center());
+
         if (self.timer) {
             self.timer.remove();
         }
@@ -233,6 +236,8 @@ function QuestionsDrawer(scene) {
         
             self.choiseA = Choise({alphabet: "A", question: questionA, callback: callbackA});
             self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
+
+            run.tweener.to({x: -100}, 300).call(function(){run.remove();}).play();
         
             self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
                 .tweener.to({x: self.scene.gridX.center()}, 300).play();
