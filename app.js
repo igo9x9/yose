@@ -14,6 +14,7 @@ ASSETS = {
         "result5": "img/result5.png",
         "result6": "img/result6.png",
         "run": "img/run.png",
+        "run2": "img/run2.png",
     },
 };
 
@@ -181,7 +182,12 @@ function QuestionsDrawer(scene) {
         const questionA = question.A;
         const questionB = question.B;
 
-        const run = Sprite("run").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.center());
+        let run;
+        if (Random.randint(0, 1) === 0) {
+            run = Sprite("run").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.span(11));
+        } else {
+            run = Sprite("run2").addChildTo(scene).setPosition(scene.gridX.center(), scene.gridY.span(11));
+        }
 
         if (self.timer) {
             self.timer.remove();
