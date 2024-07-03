@@ -5,6 +5,13 @@ ASSETS = {
     image: {
         "ok": "img/ok.png",
         "miss": "img/miss.png",
+        "title": "img/title.png",
+        "result1": "img/result1.png",
+        "result2": "img/result2.png",
+        "result3": "img/result3.png",
+        "result4": "img/result4.png",
+        "result5": "img/result5.png",
+        "result6": "img/result6.png",
     },
 };
 
@@ -18,10 +25,12 @@ phina.define('TitleScene', {
 
         this.backgroundColor = "#ecf0f1";
 
+        Sprite("title").addChildTo(this).setPosition(this.gridX.center(), this.gridY.center());
+
         Label({
             text: 'ヨセくらべ',
-            x: 320,
-            y: 320,
+            x: this.gridX.center(),
+            y: this.gridY.span(3),
             fontSize: 80,
             fill: "black",
             fontWeight: 800,
@@ -29,8 +38,8 @@ phina.define('TitleScene', {
 
         Label({
             text: 'タップして開始',
-            x: 320,
-            y: 520,
+            x: this.gridX.center(),
+            y: this.gridY.span(12),
             fontSize: 30,
             fill: "black",
             fontWeight: 800,
@@ -58,7 +67,7 @@ phina.define('ExplanationScene', {
         this.backgroundColor = "#ecf0f1";
 
         LabelArea({
-            text: '＜遊び方＞\n\n黒番のヨセが２つ出てきます。より価値が高いと思われる方をタップしてください。全５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」 としています。\n\nそれが同じ場合は、より目数が多いほうを正解としています。',
+            text: '＜遊び方＞\n\n黒番の２つのヨセAとBのうち、価値が高い方を選ぶゲームです。全５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」 としています。\n\nそれが同じ場合、より目数が多いほうが正解です。',
             x: 50,
             y: 100,
             width: 500,
@@ -160,7 +169,7 @@ function QuestionsDrawer(scene) {
 
         const questionA = question.A;
         const questionB = question.B;
-    
+
         if (self.timer) {
             self.timer.remove();
         }
@@ -213,10 +222,10 @@ function QuestionsDrawer(scene) {
         self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
     
         self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
-            .tweener.to({x: self.scene.gridX.center()}, 200).play();
+            .tweener.to({x: self.scene.gridX.center()}, 300).play();
 
         self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
-            .tweener.to({x: self.scene.gridX.center()}, 200).play();
+            .tweener.to({x: self.scene.gridX.center()}, 300).play();
     };
 
     function showPriority() {
@@ -452,38 +461,53 @@ phina.define('LastScene', {
 
         const score = options.okNumber / 5 * 100;
 
-        Label({
-            text: 'スコア：' + score + "点",
-            x: 320,
-            y: 420,
-            fontSize: 40,
-            fill: "black",
-            fontWeight: 800,
-        }).addChildTo(this);
-
-        let msg = "";
+        let img = "result";
+        let x, y;
+        let scoreText = "";
 
         if (score === 100) {
-            msg = "完璧！";
+            img += "1";
+            x = 300;
+            y = 600;
+            scoreText = "100点満点！"
         } else if (score >= 80) {
-            msg = "すばらしい！";
+            img += "2";
+            x = 320;
+            y = 600;
+            scoreText = score + "点！";
         } else if (score >= 60) {
-            msg = "すごい！";
+            img += "3";
+            x = 320;
+            y = 600;
+            scoreText = score + "点";
         } else if (score >= 40) {
-            msg = "もう少し！";
+            img += "4";
+            x = 320;
+            y = 600;
+            scoreText = score + "点";
+        } else if (score >= 20) {
+            img += "5";
+            x = 320;
+            y = 500;
+            scoreText = score + "点";
         } else {
-            msg = "うーん…";
+            img += "6";
+            x = 320;
+            y = 600;
+            scoreText = score + "点";
         }
 
         Label({
-            text: msg,
+            text: scoreText,
             x: 320,
-            y: 320,
-            fontSize: 40,
+            y: 220,
+            fontSize: 80,
             fill: "black",
             fontWeight: 800,
         }).addChildTo(this);
 
+        Sprite(img).addChildTo(this).setPosition(x, y);
+        
         this.on("pointstart",function() {
             this.exit();
         });
@@ -557,7 +581,7 @@ phina.main(function() {
         ],
     });
 
-    App.fps = 30;
+    App.fps = 60;
     // App.enableStats();
 
     App.run();
