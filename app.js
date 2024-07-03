@@ -1,5 +1,6 @@
 phina.globalize();
 
+const version = "0.9";
 
 ASSETS = {
     image: {
@@ -35,6 +36,15 @@ phina.define('TitleScene', {
             fill: "black",
             fontWeight: 800,
         }).addChildTo(this);
+
+        const verLabel = Label({
+            x: this.gridX.span(12),
+            y: this.gridY.span(4),
+            fontSize: 18,
+            fill: "black",
+            fontFamily: "monospace",
+        }).addChildTo(this);
+        verLabel.text = "ﾊﾞｰｼﾞｮﾝ " + version;
 
         Label({
             text: 'タップして開始',
@@ -469,7 +479,7 @@ phina.define('LastScene', {
             img += "1";
             x = 300;
             y = 600;
-            scoreText = "100点満点！"
+            scoreText = "100点！"
         } else if (score >= 80) {
             img += "2";
             x = 320;
@@ -1082,6 +1092,272 @@ const data = [
             "    BWW1W  ",
             "    BBBWW  ",
             "           ",
+       ]
+    },
+    {
+        id: "27",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "    BBBWW  ",
+            "    B 1BW  ",
+            "    BBBWW  ",
+            "           ",
+       ]
+    },
+    {
+        id: "28",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "       BB  ",
+            "      WWB  ",
+            "     WWBB  ",
+            "     W WWB ",
+            "  W  WW1BB ",
+            "      WWB  ",
+            "           ",
+       ]
+    },
+    {
+        id: "29",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "   WWWBBB  ",
+            "   W BW1B  ",
+            "   WWWBBB  ",
+            "     BBW   ",
+            "           ",
+       ]
+    },
+    {
+        id: "30",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      WWWW ",
+            "    WWBBBW ",
+            "    W1 WBB ",
+            "  W WBBBB  ",
+            "   WBB     ",
+            "           ",
+       ]
+    },
+    {
+        id: "31",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      BBBBB",
+            "      BW1WB",
+            "      BW WW",
+            "      BWW  ",
+            "     B BWW ",
+            "       BBW ",
+       ]
+    },
+    {
+        id: "32",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      BBBBB",
+            "      B BWW",
+            "      B BW ",
+            "   W WW1WW ",
+            "     W     ",
+            "           ",
+       ]
+    },
+    {
+        id: "33",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      BBBBB",
+            "      BWBWW",
+            "      B BW ",
+            "   W WW1WW ",
+            "     W     ",
+            "           ",
+       ]
+    },
+    {
+        id: "34",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "      BBBBB",
+            "      BW1WW",
+            "      BW W ",
+            "   BBBWWW  ",
+            "    WW     ",
+            "           ",
+       ]
+    },
+    {
+        id: "35",
+        priority: 0,
+        size: 2,
+        sizeText: "約2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        B  ",
+            "     B     ",
+            "    WB B   ",
+            "   W WB    ",
+            " W   WWBB  ",
+            "     W WBB ",
+            "     WW1WB ",
+       ]
+    },
+    {
+        id: "36",
+        priority: 0,
+        size: 2,
+        sizeText: "約2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        B  ",
+            "     B     ",
+            "    WB B   ",
+            "   W WB    ",
+            " W   WWBB  ",
+            "     W1WBB ",
+            "     WWB B ",
+       ]
+    },
+    {
+        id: "37",
+        priority: 0,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        B  ",
+            "     B     ",
+            "    WB B   ",
+            "   W WB    ",
+            " W   WWBB  ",
+            "     WB1BB ",
+            "     WWB B ",
+       ]
+    },
+    {
+        id: "38",
+        priority: 1,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "         W ",
+            "   WWWWWW  ",
+            "   W 1BBBWW",
+            "    WB  WBW",
+            " W  WB BBBB",
+            "    WWB    ",
+            "           ",
+       ]
+    },
+    {
+        id: "39",
+        priority: 2,
+        size: 2,
+        sizeText: "2目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        B  ",
+            "         BB",
+            "    BBBBBWW",
+            "    B 1WWW ",
+            "    BWW W  ",
+       ]
+    },
+    {
+        id: "40",
+        priority: 0,
+        size: 2.5,
+        sizeText: "2目半",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "         B ",
+            "    BB  B  ",
+            "    B BB BB",
+            "    BWW WWB",
+            "  B BW W  W",
+            "     1  WWW",
        ]
     },
 ]
