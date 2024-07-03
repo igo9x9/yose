@@ -192,50 +192,55 @@ function QuestionsDrawer(scene) {
     
         // self.timer = Timer({seconds: 60});
         // self.timer.addChildTo(self.scene).setPosition(self.scene.gridX.center(), 50);
+
+        setTimeout(createChoise, 10);
     
-        const okCallback = function(isUpper) {
-            return () => {
-                showPriority();
-                App.flare("ok", {isUpper: isUpper});
+        function createChoise() {
+            const okCallback = function(isUpper) {
+                return () => {
+                    showPriority();
+                    App.flare("ok", {isUpper: isUpper});
+                };
             };
-        };
-    
-        const badCallback = function(isUpper) {
-            return () => {
-                showPriority();
-                App.flare("miss", {isUpper: isUpper});
+        
+            const badCallback = function(isUpper) {
+                return () => {
+                    showPriority();
+                    App.flare("miss", {isUpper: isUpper});
+                };
             };
-        };
-    
-        let callbackA, callbackB;
-    
-        if (questionA.priority > questionB.priority) {
-            callbackA = okCallback(true);
-            callbackB = badCallback(false);
-        } else if (questionA.priority < questionB.priority) {
-            callbackA = badCallback(true);
-            callbackB = okCallback(false);
-        } else {
-            if (questionA.size > questionB.size) {
+        
+            let callbackA, callbackB;
+        
+            if (questionA.priority > questionB.priority) {
                 callbackA = okCallback(true);
                 callbackB = badCallback(false);
-            } else if (questionA.size < questionB.size) {
+            } else if (questionA.priority < questionB.priority) {
                 callbackA = badCallback(true);
                 callbackB = okCallback(false);
             } else {
-                callbackA = okCallback(true);
-                callbackB = okCallback(false);
+                if (questionA.size > questionB.size) {
+                    callbackA = okCallback(true);
+                    callbackB = badCallback(false);
+                } else if (questionA.size < questionB.size) {
+                    callbackA = badCallback(true);
+                    callbackB = okCallback(false);
+                } else {
+                    callbackA = okCallback(true);
+                    callbackB = okCallback(false);
+                }
             }
+        
+            self.choiseA = Choise({alphabet: "A", question: questionA, callback: callbackA});
+            self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
+        
+            self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
+                .tweener.to({x: self.scene.gridX.center()}, 300).play();
+    
+            self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
+                .tweener.to({x: self.scene.gridX.center()}, 300).play();
+    
         }
-    
-        self.choiseA = Choise({alphabet: "A", question: questionA, callback: callbackA});
-        self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
-    
-        self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
-            .tweener.to({x: self.scene.gridX.center()}, 300).play();
-
-        self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
-            .tweener.to({x: self.scene.gridX.center()}, 300).play();
     };
 
     function showPriority() {
