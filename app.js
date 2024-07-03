@@ -237,13 +237,15 @@ function QuestionsDrawer(scene) {
             self.choiseA = Choise({alphabet: "A", question: questionA, callback: callbackA});
             self.choiseB = Choise({alphabet: "B", question: questionB, callback: callbackB});
 
-            run.tweener.to({x: -100}, 300).call(function(){run.remove();}).play();
+            setTimeout(function() {
+                run.tweener.to({x: -100}, 300).call(function(){run.remove();}).play();
         
-            self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
-                .tweener.to({x: self.scene.gridX.center()}, 300).play();
-    
-            self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
-                .tweener.to({x: self.scene.gridX.center()}, 300).play();
+                self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
+                    .tweener.to({x: self.scene.gridX.center()}, 300).play();
+        
+                self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
+                    .tweener.to({x: self.scene.gridX.center()}, 300).play();
+            }, 300);
     
         }
     };
