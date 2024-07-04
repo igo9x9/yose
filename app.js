@@ -1,6 +1,6 @@
 phina.globalize();
 
-const version = "1.0";
+const version = "1.1";
 
 ASSETS = {
     image: {
@@ -79,11 +79,11 @@ phina.define('ExplanationScene', {
         this.backgroundColor = "#ecf0f1";
 
         LabelArea({
-            text: '＜遊び方＞\n\n黒番のヨセが２つ表示されますので、価値が高い方を選んでください。出題は全部で５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」としています。\n\nそれが同じ場合、より目数が多いほうを選んでください。',
+            text: '＜遊び方＞\n\n黒番のヨセが２つ表示されますので、価値が高い方を選んでください。出題は全部で５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、単純化のため、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」としています。\n\nこの価値が同じ場合、より目数が多いほうを正解にしています。\n\n\n＜出題内容＞\n\n問題は石田芳夫先生著「碁の計算学入門」の第３章「目数一覧表」を使わせて頂いています。これを暗記するために作りました。\n\n',
             x: 50,
-            y: 100,
+            y: 20,
             width: 500,
-            height: 600,
+            height: 1000,
             fontSize: 30,
             fill: "black",
         }).setOrigin(0,0).addChildTo(this);
@@ -260,8 +260,10 @@ function QuestionsDrawer(scene) {
     function showPriority() {
         self.choiseA.priorityLabel.show();
         self.choiseA.questionIdLabel.show();
+        self.choiseA.hiddenStones.forEach((s) => s.show());
         self.choiseB.priorityLabel.show(); 
         self.choiseB.questionIdLabel.show();
+        self.choiseB.hiddenStones.forEach((s) => s.show());
     }
 
 }
@@ -312,6 +314,8 @@ function Questions() {
 
 phina.define("Choise", {
     superClass: "RectangleShape",
+
+    hiddenStones: [],
 
     init: function(options) {
 
@@ -393,19 +397,24 @@ phina.define("Choise", {
                 return;
             }
 
-            if (color !== "1") return;
+            // if (color !== "1") return;
 
-            CircleShape({
+            const numberStone = CircleShape({
                 strokeWidth: 0,
                 radius: goban._grid.unitWidth / 2 - 0.5,
                 fill: Number(color) % 2 !== 0 ? "black" : "white",
             }).setPosition(px, py).addChildTo(goban);
 
+            if (color !== "1") {
+                numberStone.hide();
+                self.hiddenStones.push(numberStone);
+            }
+
             Label({
                 text: color,
                 fontSize: 25,
                 fill: Number(color) % 2 === 0 ? "black" : "white"
-            }).setPosition(px, py).addChildTo(goban);
+            }).setPosition(0, 0).addChildTo(numberStone);
 
         }
 
@@ -980,7 +989,7 @@ const data = [
             "         W ",
             "     W WW  ",
             "     W W W ",
-            "   BBWBB 2 ",
+            "   BBWBBW2 ",
             "   BWBB BW1",
             "         B ",
        ]
@@ -1226,9 +1235,9 @@ const data = [
             "           ",
             "      BBBBB",
             "      B BWW",
-            "      B BW ",
+            "      B3BW ",
             "   W WW1WW ",
-            "     W     ",
+            "     W 2   ",
             "           ",
        ]
     },
@@ -1245,9 +1254,9 @@ const data = [
             "           ",
             "      BBBBB",
             "      BWBWW",
-            "      B BW ",
+            "      B3BW ",
             "   W WW1WW ",
-            "     W     ",
+            "     W 2   ",
             "           ",
        ]
     },
@@ -1362,7 +1371,7 @@ const data = [
             "         BB",
             "    BBBBBWW",
             "    B 1WWW ",
-            "    BWW W  ",
+            "    BWW W 2",
        ]
     },
     {
@@ -1381,7 +1390,7 @@ const data = [
             "    B BB BB",
             "    BWW WWB",
             "  B BW W  W",
-            "     1  WWW",
+            "    312 WWW",
        ]
     },
     {
@@ -1457,7 +1466,7 @@ const data = [
             "    BBBBBBB",
             "    BWW WWB",
             "  B BW W  W",
-            "     1  WWW",
+            "    312 WWW",
        ]
     },
     {
@@ -1490,8 +1499,8 @@ const data = [
             "           ",
             "           ",
             "        BBB",
-            "        B W",
-            "      B B 1",
+            "        B3W",
+            "      B B21",
             "    B B BBW",
             "      WWWW ",
             "    W      ",
@@ -1551,8 +1560,8 @@ const data = [
             "      WB   ",
             "   W  W    ",
             " W    WBB  ",
-            "      WB   ",
-            "      1    ",
+            "     4WB   ",
+            "     213   ",
        ]
     },
     {
@@ -1571,7 +1580,7 @@ const data = [
             "   B  B    ",
             " B    BWW  ",
             "      BW   ",
-            "       1   ",
+            "      312  ",
        ]
     },
     {
@@ -1590,7 +1599,7 @@ const data = [
             "        BBB",
             "    BBBBWWB",
             "    BWWW WW",
-            "    B1BW   ",
+            "    B1BW 2 ",
        ]
     },
     {
@@ -1608,7 +1617,7 @@ const data = [
             "         B ",
             "   BBBBBBW ",
             "   BW WWW W",
-            " B BW    W ",
+            " B BW2   W ",
             "    1      ",
        ]
     },
@@ -1625,8 +1634,8 @@ const data = [
             "      BBB  ",
             "     BBWB  ",
             "     BWWB  ",
-            "  W W1  W  ",
-            "    W W W  ",
+            "  W W134W  ",
+            "    W2W W  ",
             "  W        ",
             "           ",
        ]
@@ -1646,8 +1655,8 @@ const data = [
             "         B ",
             "    BBBBB B",
             "  B BWWWBBW",
-            "   BWW 1WWW",
-            "   B       ",
+            "   BWW41WWW",
+            "   B5362   ",
        ]
     },
     {
