@@ -1,6 +1,6 @@
 phina.globalize();
 
-const version = "1.1";
+const version = "1.2";
 
 ASSETS = {
     image: {
@@ -79,7 +79,7 @@ phina.define('ExplanationScene', {
         this.backgroundColor = "#ecf0f1";
 
         LabelArea({
-            text: '＜遊び方＞\n\n黒番のヨセが２つ表示されますので、価値が高い方を選んでください。出題は全部で５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は、単純化のため、目数に関係なく「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」としています。\n\nこの価値が同じ場合、より目数が多いほうを正解にしています。\n\n\n＜出題内容＞\n\n問題は石田芳夫先生著「碁の計算学入門」の第３章「目数一覧表」を使わせて頂いています。これを暗記するために作りました。\n\n',
+            text: '＜遊び方＞\n\n黒番のヨセが２つ表示されますので、価値が高い方を選んでください。出題は全部で５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」だけで決めています。単純化のため、目数は無関係としました。\n\n\n＜出題内容＞\n\n出題する問題は石田芳夫先生著「碁の計算学入門」の第３章「目数一覧表」を使わせて頂いています。\n\n',
             x: 50,
             y: 20,
             width: 500,
@@ -259,9 +259,11 @@ function QuestionsDrawer(scene) {
 
     function showPriority() {
         self.choiseA.priorityLabel.show();
+        self.choiseA.sizeLabel.show();
         self.choiseA.questionIdLabel.show();
         self.choiseA.hiddenStones.forEach((s) => s.show());
         self.choiseB.priorityLabel.show(); 
+        self.choiseB.sizeLabel.show();
         self.choiseB.questionIdLabel.show();
         self.choiseB.hiddenStones.forEach((s) => s.show());
     }
@@ -282,7 +284,8 @@ function Questions() {
         const size = data[index1].size;
 
         const nokori = data.filter(function(q) {
-            return !(q.priority === priority && q.size === size);
+            // return !(q.priority === priority && q.size === size);
+            return q.priority !== priority;
         });
 
         const index2 = Random.randint(0, nokori.length - 1);
@@ -290,10 +293,9 @@ function Questions() {
         questions.push({"A": data[index1], "B": nokori[index2]});
 
     }
+
     // for (let i = 0; i < data.length; i++) {
-
     //     questions.push({"A": data[i], "B": data[i]});
-
     // }
 
     // 次の問題を返す
@@ -445,7 +447,14 @@ phina.define("Choise", {
             fontWeight: 800,
             fill: "black",
         }).setPosition(-210,20).hide().addChildTo(this);
-        self.priorityLabel.text = priorityText[options.question.priority] + "\n" + options.question.sizeText;
+        self.priorityLabel.text = priorityText[options.question.priority];
+
+        self.sizeLabel = Label({
+            text: "",
+            fontSize: 20,
+            fill: "black",
+        }).setPosition(-210,60).hide().addChildTo(this);
+        self.sizeLabel.text = "（ " + options.question.sizeText + " ）";
 
         this.setInteractive(true);
 
