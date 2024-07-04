@@ -2062,7 +2062,7 @@ const data = [
             "           ",
             "     W B   ",
             "   W W 1B  ",
-            " W   WB B  ",
+            " W   WBWB  ",
             "     2WB   ",
             "      WB   ",
        ]
