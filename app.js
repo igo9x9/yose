@@ -1,6 +1,6 @@
 phina.globalize();
 
-const version = "1.2";
+const version = "1.3";
 
 ASSETS = {
     image: {
@@ -81,7 +81,7 @@ phina.define('ExplanationScene', {
         LabelArea({
             text: '＜遊び方＞\n\n黒番のヨセが２つ表示されますので、価値が高い方を選んでください。出題は全部で５問です。\n\n\n＜ヨセの価値＞\n\nこのゲームでのヨセの価値は「両先手 ＞ 先手 ＞ 逆ヨセ ＞ 両後手」だけで決めています。単純化のため、目数は無関係としました。\n\n\n＜出題内容＞\n\n出題する問題は石田芳夫先生著「碁の計算学入門」の第３章「目数一覧表」を使わせて頂いています。\n\n',
             x: 50,
-            y: 20,
+            y: 50,
             width: 500,
             height: 1000,
             fontSize: 30,
@@ -248,10 +248,14 @@ function QuestionsDrawer(scene) {
                 waitCharacter.tweener.to({x: -100}, 300).call(function(){waitCharacter.remove()}).play();
         
                 self.choiseA.setPosition(1000, self.scene.gridY.span(5)).addChildTo(self.scene)
-                    .tweener.to({x: self.scene.gridX.center()}, 300).play();
+                    .tweener.to({x: self.scene.gridX.center()}, 300)
+                    .call(function() {self.choiseA.ready()})
+                    .play();
         
                 self.choiseB.setPosition(1000, self.scene.gridY.span(12.2)).addChildTo(self.scene)
-                    .tweener.to({x: self.scene.gridX.center()}, 300).play();
+                    .tweener.to({x: self.scene.gridX.center()}, 300)
+                    .call(function() {self.choiseB.ready()})
+                    .play();
             }, 300);
     
         }
@@ -294,7 +298,8 @@ function Questions() {
 
     }
 
-    // for (let i = 0; i < data.length; i++) {
+    // const checkQuestionFromLast = 2;
+    // for (let i = data.length - checkQuestionFromLast; i < data.length; i++) {
     //     questions.push({"A": data[i], "B": data[i]});
     // }
 
@@ -399,8 +404,6 @@ phina.define("Choise", {
                 return;
             }
 
-            // if (color !== "1") return;
-
             const numberStone = CircleShape({
                 strokeWidth: 0,
                 radius: goban._grid.unitWidth / 2 - 0.5,
@@ -458,11 +461,16 @@ phina.define("Choise", {
 
         this.setInteractive(true);
 
-        this.on("pointstart", function() {
-            options.callback();
-        });
+        self.callback = options.callback;
 
-    }
+    },
+
+    ready: function() {
+        const self = this;
+        this.on("pointstart", function() {
+            self.callback();
+        });
+    },
 });
 
 phina.define("Timer", {
@@ -2160,6 +2168,44 @@ const data = [
             "W   W WWB  ",
             "     2  B  ",
             "      1    ",
+       ]
+    },
+    {
+        id: "108",
+        priority: 1,
+        size: 7,
+        sizeText: "7目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        WW ",
+            "        WB ",
+            "     WWWBB ",
+            "     WBB   ",
+            "     W3  B ",
+            "     21    ",
+       ]
+    },
+    {
+        id: "109",
+        priority: 1,
+        size: 7,
+        sizeText: "7目",
+        stones: [
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "           ",
+            "        W  ",
+            " W     BW  ",
+            "  B B B W  ",
+            "B    BWW   ",
+            "     312   ",
+            "           ",
        ]
     },
 ]
